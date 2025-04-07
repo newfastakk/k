@@ -1,1 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Core</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: all 0.5s ease;
+        }
+        .login-box, .profile-box, .main-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            width: 350px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.05);
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #007aff, #00c6ff);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        .tab:hover, .tab.active {
+            background: rgba(0, 122, 255, 0.2);
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #007aff, #00c6ff);
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            animation: gradientShift 2s infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 10px auto;
+            background: #ddd;
+            cursor: pointer;
+        }
+        .snow {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+    </style>
+</head>
+<body>
+    <div id="container" class="container"></div>
 
+    <script>
+        const keys = fetch('https://raw.githubusercontent.com/newfastakk/k/refs/heads/main/keys.txt')
+            .then(res => res.text())
+            .then(text => text.split('\n').filter(k => k.trim()));
+
+        let username, password;
+        const ip = 'user_ip_' + Math.random().toString(36).substr(2, 9); // Симуляция IP
+
+        function showLogin() {
+            const loginHTML = `
+                <div class="login-box">
+                    <h2>Log-in</h2>
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="password" id="password" placeholder="Password">
+                    <input type="text" id="key" placeholder="Key">
+                    <button onclick="checkLogin()">Войти</button>
+                    <label><input type="checkbox" id="remember"> Запомнить меня</label>
+                </div>
+            `;
+            document.getElementById('container').innerHTML = loginHTML;
+
+            if (localStorage.getItem(ip)) {
+                const saved = JSON.parse(localStorage.getItem(ip));
+                document.getElementById('username').value = saved.username;
+                document.getElementById('password').value = saved.password;
+                document.getElementById('remember').checked = true;
+            }
+        }
+
+        async function checkLogin() {
+            username = document.getElementById('username').value;
+            password = document.getElementById('password').value;
+            const key = document.getElementById('key').value;
+            const remember = document.getElementById('remember').checked;
+
+            const validKeys = await keys;
+            if (validKeys.includes(key)) {
+                if (remember) {
+                    localStorage.setItem(ip, JSON.stringify({ username, password }));
+                }
+                fadeOut(showPhoto);
+            } else {
+                alert('Неверный ключ!');
+            }
+        }
+
+        function showPhoto() {
+            const photoHTML = `
+                <div class="profile-box">
+                    <h2>Hi dear ${username}, now take a picture:</h2>
+                    <div class="avatar" onclick="document.getElementById('avatarInput').click()"></div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+                    <button onclick="fadeOut(showLoading)">Выбрать</button>
+                </div>
+            `;
+            document.getElementById('container').innerHTML = photoHTML;
+        }
+
+        function uploadAvatar(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    localStorage.setItem(ip + '_avatar', reader.result);
+                    document.querySelector('.avatar').style.backgroundImage = `url(${reader.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('container').innerHTML = `
+                <div class="loading gradient-text">Genesis</div>
+                <div style="position:absolute;bottom:20%;width:100%;text-align:center">core</div>
+            `;
+            setTimeout(() => fadeOut(showMain), 2000);
+        }
+
+        function showMain() {
+            const avatar = localStorage.getItem(ip + '_avatar') || '';
+            const mainHTML = `
+                <div class="main-content">
+                    <h2>Welcome!</h2>
+                    <div class="tabs">
+                        <div class="tab active" onclick="showTab('profile', this)">Profile</div>
+                        <div class="tab" onclick="showTab('download', this)">Download</div>
+                        <div class="tab" onclick="showTab('news', this)">News</div>
+                    </div>
+                    <div id="tab-content">
+                        <div id="profile" class="tab-pane">
+                            <div class="avatar" style="background-image:url(${avatar})" onclick="document.getElementById('avatarInput').click()"></div>
+                            <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+                            <input type="text" value="${username}" id="editUsername">
+                            <input type="password" value="${password}" id="editPassword">
+                            <h3>Настройки</h3>
+                            <label><input type="checkbox" id="snow" onchange="toggleSnow()"> Snow</label><br>
+                            <label><input type="checkbox" id="blur" onchange="toggleBlur()"> Размытые блоки</label><br>
+                            <label><input type="checkbox" id="translate"> Авто перевод</label><br>
+                            <button onclick="showLogin()">Выйти</button>
+                        </div>
+                        <div id="download" class="tab-pane" style="display:none">
+                            <input type="text" placeholder="Поиск...">
+                            <div style="text-align:left">
+                                <img src="https://icons.veryicon.com/png/o/education-technology/power-icon/core-4.png" style="width:50px">
+                                <h3>Genesis Core</h3>
+                                <p>Версия: 2.6(f2)</p>
+                                <p>Best quality emulator, with custom fixes</p>
+                                <button onclick="installApp()">Установить</button>
+                            </div>
+                        </div>
+                        <div id="news" class="tab-pane" style="display:none">
+                            <h3>upgraded to 2.6(f2)</h3>
+                            <p>fixed bugs</p>
+                            <p>author: <span class="gradient-text">newfastakk(dev)</span></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('container').innerHTML = mainHTML;
+        }
+
+        function fadeOut(next) {
+            const container = document.getElementById('container');
+            container.style.opacity = 0;
+            setTimeout(() => {
+                next();
+                container.style.opacity = 1;
+            }, 500);
+        }
+
+        function showTab(tab, element) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(t => t.style.display = 'none');
+            document.getElementById(tab).style.display = 'block';
+        }
+
+        function installApp() {
+            const btn = document.querySelector('#download button');
+            btn.textContent = 'Устанавливается...';
+            setTimeout(() => {
+                btn.textContent = 'Установить';
+                window.open('https://t.me/c/2254905235/4', '_blank');
+            }, 3000);
+        }
+
+        function toggleSnow() {
+            if (document.getElementById('snow').checked) {
+                for (let i = 0; i < 50; i++) {
+                    const snow = document.createElement('div');
+                    snow.className = 'snow';
+                    snow.style.left = Math.random() * 100 + 'vw';
+                    snow.style.animationDuration = Math.random() * 5 + 5 + 's';
+                    document.body.appendChild(snow);
+                }
+            } else {
+                document.querySelectorAll('.snow').forEach(s => s.remove());
+            }
+        }
+
+        function toggleBlur() {
+            document.querySelector('.main-content').style.backdropFilter = 
+                document.getElementById('blur').checked ? 'blur(10px)' : 'blur(0)';
+        }
+
+        showLogin();
+    </script>
+</body>
+</html>
