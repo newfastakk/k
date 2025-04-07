@@ -5,107 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genesis Core</title>
     <style>
+        :root {
+            --primary: #ffffff;
+            --accent: #a855f7;
+            --bg: linear-gradient(135deg, #f5f5f5, #d8b4fe);
+            --shadow: 0 15px 40px rgba(168, 85, 247, 0.3);
+            --text-accent: #8b5cf6;
+        }
+        .dark-theme {
+            --primary: #1e1e1e;
+            --accent: #d8b4fe;
+            --bg: linear-gradient(135deg, #2a2a2a, #4b0082);
+            --shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
+            --text-accent: #c4b5fd;
+        }
         body {
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--bg);
             height: 100vh;
             overflow: hidden;
-            color: #333;
+            color: var(--primary);
+            transition: all 0.5s ease;
         }
         .container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            transition: all 0.5s ease;
+            transition: opacity 0.5s ease;
         }
         .login-box, .profile-box, .main-content {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            width: 350px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 380px;
             text-align: center;
-            animation: fadeIn 0.5s ease;
+            animation: neonFade 0.8s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes neonFade {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        h2, h3 {
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
         }
         input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.05);
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
             font-size: 16px;
+            color: var(--primary);
+            transition: all 0.3s;
+        }
+        input:focus {
+            box-shadow: 0 0 15px var(--accent);
+            outline: none;
         }
         button {
-            padding: 12px 20px;
+            padding: 14px 25px;
             border: none;
-            border-radius: 10px;
-            background: linear-gradient(45deg, #007aff, #00c6ff);
+            border-radius: 12px;
+            background: linear-gradient(45deg, var(--accent), #ec4899);
             color: white;
             font-size: 16px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(168, 85, 247, 0.4);
         }
         button:hover {
-            transform: scale(1.05);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.6);
         }
         .tabs {
             display: flex;
             justify-content: space-around;
-            margin: 20px 0;
+            margin: 25px 0;
         }
         .tab {
-            padding: 10px 20px;
+            padding: 12px 25px;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 12px;
             transition: all 0.3s;
+            color: var(--primary);
         }
         .tab:hover, .tab.active {
-            background: rgba(0, 122, 255, 0.2);
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--accent);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
         }
         .gradient-text {
-            background: linear-gradient(45deg, #007aff, #00c6ff);
+            background: linear-gradient(45deg, var(--accent), #ec4899);
             -webkit-background-clip: text;
             color: transparent;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
         }
         .loading {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 36px;
-            animation: gradientShift 2s infinite;
+            font-size: 48px;
+            background: linear-gradient(45deg, var(--accent), #ec4899);
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: pulse 2s infinite;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); }
         }
         .avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            margin: 10px auto;
-            background: #ddd;
+            margin: 15px auto;
+            background: rgba(255, 255, 255, 0.1);
             cursor: pointer;
+            border: 2px dashed var(--accent);
+            transition: all 0.3s;
+        }
+        .avatar:hover {
+            box-shadow: 0 0 20px var(--accent);
         }
         .snow {
             position: fixed;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             background: white;
             border-radius: 50%;
             pointer-events: none;
             animation: fall linear infinite;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
         @keyframes fall {
             0% { transform: translateY(-100vh); }
@@ -122,27 +163,27 @@
             .then(text => text.split('\n').filter(k => k.trim()));
 
         let username, password;
-        const ip = 'user_ip_' + Math.random().toString(36).substr(2, 9); // Симуляция IP
+        const ip = 'user_ip_' + navigator.userAgent.replace(/\D/g, ''); // Более стабильный IP-ключ
 
         function showLogin() {
+            const saved = JSON.parse(localStorage.getItem(ip) || '{}');
+            if (saved.username && saved.password && saved.key) {
+                username = saved.username;
+                password = saved.password;
+                fadeOut(showPhoto);
+                return;
+            }
             const loginHTML = `
                 <div class="login-box">
                     <h2>Log-in</h2>
-                    <input type="text" id="username" placeholder="Username">
-                    <input type="password" id="password" placeholder="Password">
-                    <input type="text" id="key" placeholder="Key">
+                    <input type="text" id="username" placeholder="Username" value="${saved.username || ''}">
+                    <input type="password" id="password" placeholder="Password" value="${saved.password || ''}">
+                    <input type="text" id="key" placeholder="Key" value="${saved.key || ''}">
                     <button onclick="checkLogin()">Войти</button>
-                    <label><input type="checkbox" id="remember"> Запомнить меня</label>
+                    <label style="color: var(--primary)"><input type="checkbox" id="remember" ${saved.remember ? 'checked' : ''}> Запомнить меня</label>
                 </div>
             `;
             document.getElementById('container').innerHTML = loginHTML;
-
-            if (localStorage.getItem(ip)) {
-                const saved = JSON.parse(localStorage.getItem(ip));
-                document.getElementById('username').value = saved.username;
-                document.getElementById('password').value = saved.password;
-                document.getElementById('remember').checked = true;
-            }
         }
 
         async function checkLogin() {
@@ -154,7 +195,7 @@
             const validKeys = await keys;
             if (validKeys.includes(key)) {
                 if (remember) {
-                    localStorage.setItem(ip, JSON.stringify({ username, password }));
+                    localStorage.setItem(ip, JSON.stringify({ username, password, key, remember: true }));
                 }
                 fadeOut(showPhoto);
             } else {
@@ -165,7 +206,7 @@
         function showPhoto() {
             const photoHTML = `
                 <div class="profile-box">
-                    <h2>Hi dear ${username}, now take a picture:</h2>
+                    <h2>Hi dear <span class="gradient-text">${username}</span>, now take a picture:</h2>
                     <div class="avatar" onclick="document.getElementById('avatarInput').click()"></div>
                     <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
                     <button onclick="fadeOut(showLoading)">Выбрать</button>
@@ -188,8 +229,8 @@
 
         function showLoading() {
             document.getElementById('container').innerHTML = `
-                <div class="loading gradient-text">Genesis</div>
-                <div style="position:absolute;bottom:20%;width:100%;text-align:center">core</div>
+                <div class="loading">Genesis</div>
+                <div style="position:absolute;bottom:20%;width:100%;text-align:center;color:var(--accent)">core</div>
             `;
             setTimeout(() => fadeOut(showMain), 2000);
         }
@@ -198,7 +239,7 @@
             const avatar = localStorage.getItem(ip + '_avatar') || '';
             const mainHTML = `
                 <div class="main-content">
-                    <h2>Welcome!</h2>
+                    <h2>Welcome, <span class="gradient-text">${username}</span>!</h2>
                     <div class="tabs">
                         <div class="tab active" onclick="showTab('profile', this)">Profile</div>
                         <div class="tab" onclick="showTab('download', this)">Download</div>
@@ -210,26 +251,27 @@
                             <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
                             <input type="text" value="${username}" id="editUsername">
                             <input type="password" value="${password}" id="editPassword">
-                            <h3>Настройки</h3>
+                            <h3>Settings</h3>
                             <label><input type="checkbox" id="snow" onchange="toggleSnow()"> Snow</label><br>
-                            <label><input type="checkbox" id="blur" onchange="toggleBlur()"> Размытые блоки</label><br>
-                            <label><input type="checkbox" id="translate"> Авто перевод</label><br>
-                            <button onclick="showLogin()">Выйти</button>
+                            <label><input type="checkbox" id="blur" checked onchange="toggleBlur()"> Blur Blocks</label><br>
+                            <label><input type="checkbox" id="translate"> Auto Translate</label><br>
+                            <label><input type="checkbox" id="theme" onchange="toggleTheme()"> Dark Theme</label><br>
+                            <button onclick="logout()">Выйти</button>
                         </div>
                         <div id="download" class="tab-pane" style="display:none">
-                            <input type="text" placeholder="Поиск...">
+                            <input type="text" placeholder="Search...">
                             <div style="text-align:left">
-                                <img src="https://icons.veryicon.com/png/o/education-technology/power-icon/core-4.png" style="width:50px">
+                                <img src="https://icons.veryicon.com/png/o/education-technology/power-icon/core-4.png" style="width:60px;border-radius:10px">
                                 <h3>Genesis Core</h3>
-                                <p>Версия: 2.6(f2)</p>
-                                <p>Best quality emulator, with custom fixes</p>
+                                <p>Version: <span style="color:var(--text-accent)">2.6(f2)</span></p>
+                                <p style="color:var(--primary)">Best quality emulator, with custom fixes</p>
                                 <button onclick="installApp()">Установить</button>
                             </div>
                         </div>
                         <div id="news" class="tab-pane" style="display:none">
-                            <h3>upgraded to 2.6(f2)</h3>
-                            <p>fixed bugs</p>
-                            <p>author: <span class="gradient-text">newfastakk(dev)</span></p>
+                            <h3 style="color:var(--text-accent)">Upgraded to 2.6(f2)</h3>
+                            <p>Fixed bugs</p>
+                            <p>Author: <span class="gradient-text">newfastakk(dev)</span></p>
                         </div>
                     </div>
                 </div>
@@ -278,7 +320,17 @@
 
         function toggleBlur() {
             document.querySelector('.main-content').style.backdropFilter = 
-                document.getElementById('blur').checked ? 'blur(10px)' : 'blur(0)';
+                document.getElementById('blur').checked ? 'blur(15px)' : 'blur(0)';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+
+        function logout() {
+            localStorage.removeItem(ip);
+            localStorage.removeItem(ip + '_avatar');
+            fadeOut(showLogin);
         }
 
         showLogin();
