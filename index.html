@@ -5,156 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genesis Core</title>
     <style>
-        :root {
-            --primary: #ffffff;
-            --accent: #a855f7;
-            --bg: linear-gradient(135deg, #f5f5f5, #d8b4fe);
-            --shadow: 0 15px 40px rgba(168, 85, 247, 0.3);
-            --text-accent: #8b5cf6;
-        }
-        .dark-theme {
-            --primary: #1e1e1e;
-            --accent: #d8b4fe;
-            --bg: linear-gradient(135deg, #2a2a2a, #4b0082);
-            --shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
-            --text-accent: #c4b5fd;
-        }
         body {
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
             height: 100vh;
             overflow: hidden;
-            color: var(--primary);
-            transition: all 0.5s ease;
+            transition: background 0.5s ease;
+            perspective: 1000px; /* Для 3D-эффектов */
         }
         .container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            transition: opacity 0.5s ease;
+            transition: all 0.5s ease;
         }
         .login-box, .profile-box, .main-content {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.9);
             padding: 40px;
-            border-radius: 25px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 380px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            width: 420px;
             text-align: center;
-            animation: neonFade 0.8s ease;
+            transform-style: preserve-3d;
+            animation: slideIn 0.7s ease;
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        @keyframes neonFade {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        h2, h3 {
-            color: var(--accent);
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateZ(-200px) rotateX(20deg); }
+            to { opacity: 1; transform: translateZ(0) rotateX(0deg); }
         }
         input {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             margin: 12px 0;
-            border: 1px solid var(--accent);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.1);
             font-size: 16px;
-            color: var(--primary);
             transition: all 0.3s;
         }
         input:focus {
-            box-shadow: 0 0 15px var(--accent);
             outline: none;
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.7);
+            background: rgba(255, 255, 255, 0.3);
         }
         button {
-            padding: 14px 25px;
+            padding: 15px 30px;
             border: none;
-            border-radius: 12px;
-            background: linear-gradient(45deg, var(--accent), #ec4899);
+            border-radius: 15px;
+            background: linear-gradient(45deg, #9333ea, #ec4899, #00ddeb);
             color: white;
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 5px 20px rgba(168, 85, 247, 0.4);
+            box-shadow: 0 5px 20px rgba(147, 51, 234, 0.5);
         }
         button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.6);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.8);
         }
         .tabs {
             display: flex;
             justify-content: space-around;
-            margin: 25px 0;
+            margin: 30px 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 8px;
+            transform: translateZ(20px);
         }
         .tab {
-            padding: 12px 25px;
+            padding: 12px 30px;
             cursor: pointer;
             border-radius: 12px;
             transition: all 0.3s;
-            color: var(--primary);
+            color: #9333ea;
         }
         .tab:hover, .tab.active {
-            background: rgba(168, 85, 247, 0.2);
-            color: var(--accent);
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+            background: linear-gradient(45deg, #9333ea, #ec4899);
+            color: white;
+            transform: scale(1.1);
         }
         .gradient-text {
-            background: linear-gradient(45deg, var(--accent), #ec4899);
+            background: linear-gradient(45deg, #9333ea, #ec4899, #00ddeb);
             -webkit-background-clip: text;
             color: transparent;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+            text-shadow: 0 0 15px rgba(147, 51, 234, 0.7);
         }
         .loading {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 48px;
-            background: linear-gradient(45deg, var(--accent), #ec4899);
+            font-size: 60px;
+            background: linear-gradient(45deg, #9333ea, #ec4899, #00ddeb);
             -webkit-background-clip: text;
             color: transparent;
-            animation: pulse 2s infinite;
+            animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.05); }
-            100% { transform: translate(-50%, -50%) scale(1); }
+            0% { transform: translate(-50%, -50%) scale(1) rotateX(0deg); }
+            50% { transform: translate(-50%, -50%) scale(1.1) rotateX(10deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotateX(0deg); }
         }
         .avatar {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
-            margin: 15px auto;
-            background: rgba(255, 255, 255, 0.1);
+            margin: 20px auto;
+            background: #ddd;
             cursor: pointer;
-            border: 2px dashed var(--accent);
             transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
+            object-fit: cover; /* Для корректного отображения фото */
         }
         .avatar:hover {
-            box-shadow: 0 0 20px var(--accent);
+            transform: scale(1.1) rotateZ(5deg);
         }
         .snow {
             position: fixed;
-            width: 12px;
-            height: 12px;
+            width: 15px;
+            height: 15px;
             background: white;
             border-radius: 50%;
             pointer-events: none;
             animation: fall linear infinite;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
         }
         @keyframes fall {
-            0% { transform: translateY(-100vh); }
-            100% { transform: translateY(100vh); }
+            0% { transform: translateY(-100vh) rotateZ(0deg); }
+            100% { transform: translateY(100vh) rotateZ(360deg); }
+        }
+        .theme-light { background: linear-gradient(135deg, #f5f7fa 0%, #d8b4fe 100%); }
+        .theme-dark { background: linear-gradient(135deg, #1e1e2f 0%, #6b21a8 100%); }
+        .theme-dark .login-box, .theme-dark .profile-box, .theme-dark .main-content {
+            background: rgba(30, 30, 47, 0.95);
+            color: #fff;
         }
     </style>
 </head>
-<body>
+<body class="theme-light">
     <div id="container" class="container"></div>
 
     <script>
@@ -163,27 +156,31 @@
             .then(text => text.split('\n').filter(k => k.trim()));
 
         let username, password;
-        const ip = 'user_ip_' + navigator.userAgent.replace(/\D/g, ''); // Более стабильный IP-ключ
+        const ip = 'user_ip_' + navigator.userAgent.replace(/\W/g, '');
 
         function showLogin() {
-            const saved = JSON.parse(localStorage.getItem(ip) || '{}');
-            if (saved.username && saved.password && saved.key) {
-                username = saved.username;
-                password = saved.password;
-                fadeOut(showPhoto);
-                return;
-            }
+            const saved = localStorage.getItem(ip) ? JSON.parse(localStorage.getItem(ip)) : {};
             const loginHTML = `
                 <div class="login-box">
-                    <h2>Log-in</h2>
+                    <h2 class="gradient-text">Log-in</h2>
                     <input type="text" id="username" placeholder="Username" value="${saved.username || ''}">
                     <input type="password" id="password" placeholder="Password" value="${saved.password || ''}">
-                    <input type="text" id="key" placeholder="Key" value="${saved.key || ''}">
+                    <input type="text" id="key" placeholder="Key">
                     <button onclick="checkLogin()">Войти</button>
-                    <label style="color: var(--primary)"><input type="checkbox" id="remember" ${saved.remember ? 'checked' : ''}> Запомнить меня</label>
+                    <label><input type="checkbox" id="remember" ${saved.remember ? 'checked' : ''}> Запомнить меня</label>
                 </div>
             `;
             document.getElementById('container').innerHTML = loginHTML;
+
+            if (saved.remember && saved.keyVerified && localStorage.getItem(ip + '_avatar')) {
+                username = saved.username;
+                password = saved.password;
+                fadeOut(showMain);
+            } else if (saved.remember && saved.keyVerified) {
+                username = saved.username;
+                password = saved.password;
+                fadeOut(showPhoto);
+            }
         }
 
         async function checkLogin() {
@@ -194,9 +191,12 @@
 
             const validKeys = await keys;
             if (validKeys.includes(key)) {
-                if (remember) {
-                    localStorage.setItem(ip, JSON.stringify({ username, password, key, remember: true }));
-                }
+                localStorage.setItem(ip, JSON.stringify({ 
+                    username, 
+                    password, 
+                    remember, 
+                    keyVerified: true 
+                }));
                 fadeOut(showPhoto);
             } else {
                 alert('Неверный ключ!');
@@ -204,10 +204,11 @@
         }
 
         function showPhoto() {
+            const savedAvatar = localStorage.getItem(ip + '_avatar') || '';
             const photoHTML = `
                 <div class="profile-box">
-                    <h2>Hi dear <span class="gradient-text">${username}</span>, now take a picture:</h2>
-                    <div class="avatar" onclick="document.getElementById('avatarInput').click()"></div>
+                    <h2 class="gradient-text">Hi dear ${username}, now take a picture:</h2>
+                    <div class="avatar" style="background-image:url(${savedAvatar})" onclick="document.getElementById('avatarInput').click()"></div>
                     <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
                     <button onclick="fadeOut(showLoading)">Выбрать</button>
                 </div>
@@ -230,16 +231,17 @@
         function showLoading() {
             document.getElementById('container').innerHTML = `
                 <div class="loading">Genesis</div>
-                <div style="position:absolute;bottom:20%;width:100%;text-align:center;color:var(--accent)">core</div>
+                <div style="position:absolute;bottom:20%;width:100%;text-align:center" class="gradient-text">core</div>
             `;
             setTimeout(() => fadeOut(showMain), 2000);
         }
 
         function showMain() {
             const avatar = localStorage.getItem(ip + '_avatar') || '';
+            const saved = JSON.parse(localStorage.getItem(ip));
             const mainHTML = `
                 <div class="main-content">
-                    <h2>Welcome, <span class="gradient-text">${username}</span>!</h2>
+                    <h2 class="gradient-text">Welcome!</h2>
                     <div class="tabs">
                         <div class="tab active" onclick="showTab('profile', this)">Profile</div>
                         <div class="tab" onclick="showTab('download', this)">Download</div>
@@ -249,29 +251,32 @@
                         <div id="profile" class="tab-pane">
                             <div class="avatar" style="background-image:url(${avatar})" onclick="document.getElementById('avatarInput').click()"></div>
                             <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
-                            <input type="text" value="${username}" id="editUsername">
-                            <input type="password" value="${password}" id="editPassword">
-                            <h3>Settings</h3>
+                            <input type="text" value="${saved.username}" id="editUsername">
+                            <input type="password" value="${saved.password}" id="editPassword">
+                            <h3 class="gradient-text">Настройки</h3>
                             <label><input type="checkbox" id="snow" onchange="toggleSnow()"> Snow</label><br>
-                            <label><input type="checkbox" id="blur" checked onchange="toggleBlur()"> Blur Blocks</label><br>
-                            <label><input type="checkbox" id="translate"> Auto Translate</label><br>
-                            <label><input type="checkbox" id="theme" onchange="toggleTheme()"> Dark Theme</label><br>
+                            <label><input type="checkbox" id="blur" onchange="toggleBlur()" checked> Размытые блоки</label><br>
+                            <label><input type="checkbox" id="translate"> Авто перевод</label><br>
+                            <select onchange="switchTheme(this.value)">
+                                <option value="light">Светлая тема</option>
+                                <option value="dark">Тёмная тема</option>
+                            </select><br>
                             <button onclick="logout()">Выйти</button>
                         </div>
                         <div id="download" class="tab-pane" style="display:none">
-                            <input type="text" placeholder="Search...">
+                            <input type="text" placeholder="Поиск...">
                             <div style="text-align:left">
-                                <img src="https://icons.veryicon.com/png/o/education-technology/power-icon/core-4.png" style="width:60px;border-radius:10px">
-                                <h3>Genesis Core</h3>
-                                <p>Version: <span style="color:var(--text-accent)">2.6(f2)</span></p>
-                                <p style="color:var(--primary)">Best quality emulator, with custom fixes</p>
+                                <img src="https://icons.veryicon.com/png/o/education-technology/power-icon/core-4.png" style="width:70px;border-radius:15px">
+                                <h3 class="gradient-text">Genesis Core</h3>
+                                <p>Версия: 2.6(f2)</p>
+                                <p>Best quality emulator, with custom fixes</p>
                                 <button onclick="installApp()">Установить</button>
                             </div>
                         </div>
                         <div id="news" class="tab-pane" style="display:none">
-                            <h3 style="color:var(--text-accent)">Upgraded to 2.6(f2)</h3>
-                            <p>Fixed bugs</p>
-                            <p>Author: <span class="gradient-text">newfastakk(dev)</span></p>
+                            <h3 class="gradient-text">upgraded to 2.6(f2)</h3>
+                            <p>fixed bugs</p>
+                            <p>author: <span class="gradient-text">newfastakk(dev)</span></p>
                         </div>
                     </div>
                 </div>
@@ -282,9 +287,11 @@
         function fadeOut(next) {
             const container = document.getElementById('container');
             container.style.opacity = 0;
+            container.style.transform = 'translateZ(-100px) scale(0.9)';
             setTimeout(() => {
                 next();
                 container.style.opacity = 1;
+                container.style.transform = 'translateZ(0) scale(1)';
             }, 500);
         }
 
@@ -320,11 +327,11 @@
 
         function toggleBlur() {
             document.querySelector('.main-content').style.backdropFilter = 
-                document.getElementById('blur').checked ? 'blur(15px)' : 'blur(0)';
+                document.getElementById('blur').checked ? 'blur(20px)' : 'blur(0)';
         }
 
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
+        function switchTheme(theme) {
+            document.body.className = theme === 'light' ? 'theme-light' : 'theme-dark';
         }
 
         function logout() {
