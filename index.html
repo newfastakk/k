@@ -201,23 +201,9 @@
 <body>
     <div id="container" class="container"></div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBFR0L-ZQclteVRQafb3QmBDVvqdWTqP5E",
-            authDomain: "genesis-core-8bf44.firebaseapp.com",
-            projectId: "genesis-core-8bf44",
-            storageBucket: "genesis-core-8bf44.firebasestorage.app",
-            messagingSenderId: "277751309296",
-            appId: "1:277751309296:web:546b991be2af8201123335",
-            measurementId: "G-NNBRTN6K47"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+    <script>
         let username;
+        const keysURL = 'https://raw.githubusercontent.com/newfastakk/k/refs/heads/main/keys.txt';
 
         function showLogin() {
             const loginHTML = `
@@ -247,35 +233,62 @@
         }
 
         async function register() {
-            username = document.getElementById('username').value;
+            const usernameInput = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const key = document.getElementById('key').value;
-            const email = `${username}@genesis-core.com`; // Фиктивный email для Firebase
 
-            const validKeys = await fetch('https://raw.githubusercontent.com/newfastakk/k/refs/heads/main/keys.txt')
-                .then(res => res.text())
-                .then(text => text.split('\n').filter(k => k.trim()));
+            if (!usernameInput || !password || !key) {
+                alert('Заполните все поля!');
+                return;
+            }
 
-            if (validKeys.includes(key)) {
-                createUserWithEmailAndPassword(auth, email, password)
-                    .then(() => fadeOut(showPhoto))
-                    .catch(error => alert('Ошибка регистрации: ' + error.message));
-            } else {
-                alert('Неверный ключ!');
+            try {
+                const response = await fetch(keysURL);
+                const text = await response.text();
+                const validKeys = text.split('\n').filter(k => k.trim());
+
+                if (!validKeys.includes(key)) {
+                    alert('Неверный ключ!');
+                    return;
+                }
+
+                if (localStorage.getItem('user_' + usernameInput)) {
+                    alert('Пользователь уже существует!');
+                    return;
+                }
+
+                username = usernameInput;
+                localStorage.setItem('user_' + username, JSON.stringify({ username, password }));
+                fadeOut(showPhoto);
+            } catch (error) {
+                alert('Ошибка: ' + error.message);
             }
         }
 
         function login() {
-            username = document.getElementById('username').value;
+            const usernameInput = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const email = `${username}@genesis-core.com`;
 
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    const avatar = localStorage.getItem('avatar_' + username);
-                    fadeOut(avatar ? showMain : showPhoto);
-                })
-                .catch(error => alert('Ошибка входа: ' + error.message));
+            if (!usernameInput || !password) {
+                alert('Заполните все поля!');
+                return;
+            }
+
+            const userData = localStorage.getItem('user_' + usernameInput);
+            if (!userData) {
+                alert('Пользователь не найден!');
+                return;
+            }
+
+            const user = JSON.parse(userData);
+            if (user.password !== password) {
+                alert('Неверный пароль!');
+                return;
+            }
+
+            username = usernameInput;
+            const avatar = localStorage.getItem('avatar_' + username);
+            fadeOut(avatar ? showMain : showPhoto);
         }
 
         function showPhoto() {
@@ -313,6 +326,7 @@
 
         function showMain() {
             const avatar = localStorage.getItem('avatar_' + username) || '';
+            const user = JSON.parse(localStorage.getItem('user_' + username));
             const mainHTML = `
                 <div class="main-content">
                     <h2 class="gradient-text">Welcome, ${username}!</h2>
@@ -410,15 +424,17 @@
         }
 
         function logout() {
-            signOut(auth).then(() => fadeOut(showLogin));
+            username = null;
+            fadeOut(showLogin);
         }
 
         function updatePassword() {
             const newPassword = document.getElementById('editPassword').value;
             if (newPassword) {
-                auth.currentUser.updatePassword(newPassword)
-                    .then(() => alert('Пароль обновлён!'))
-                    .catch(error => alert('Ошибка: ' + error.message));
+                const user = JSON.parse(localStorage.getItem('user_' + username));
+                user.password = newPassword;
+                localStorage.setItem('user_' + username, JSON.stringify(user));
+                alert('Пароль обновлён!');
             }
         }
 
