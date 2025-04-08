@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#9333ea">
     <title>Genesis Core</title>
+    <link rel="icon" href="https://icons.veryicon.com/png/o/education-technology/power-icon/core-4.png">
+    <link rel="apple-touch-icon" href="https://icons.veryicon.com/png/o/education-technology/power-icon/core-4.png">
     <style>
         body {
             margin: 0;
@@ -11,8 +16,9 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             height: 100vh;
             overflow: hidden;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c4b5fd 100%);
             transition: background 0.5s ease;
-            perspective: 1000px; /* Для 3D-эффектов */
+            perspective: 1000px;
         }
         .container {
             display: flex;
@@ -21,65 +27,69 @@
             height: 100vh;
             transition: all 0.5s ease;
         }
-        .login-box, .profile-box, .main-content {
-            background: rgba(255, 255, 255, 0.9);
+        .login-box, .register-box, .profile-box, .main-content {
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(20px);
-            width: 420px;
+            width: 450px;
             text-align: center;
             transform-style: preserve-3d;
             animation: slideIn 0.7s ease;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            max-height: 80vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #9333ea #e0e7ff;
         }
         @keyframes slideIn {
-            from { opacity: 0; transform: translateZ(-200px) rotateX(20deg); }
-            to { opacity: 1; transform: translateZ(0) rotateX(0deg); }
+            from { opacity: 0; transform: translateZ(-200px) rotateY(15deg); }
+            to { opacity: 1; transform: translateZ(0) rotateY(0deg); }
         }
         input {
             width: 100%;
             padding: 15px;
-            margin: 12px 0;
+            margin: 10px 0;
             border: none;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.05);
             font-size: 16px;
             transition: all 0.3s;
         }
         input:focus {
             outline: none;
-            box-shadow: 0 0 15px rgba(147, 51, 234, 0.7);
-            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.5);
+            background: rgba(255, 255, 255, 0.2);
         }
         button {
             padding: 15px 30px;
             border: none;
-            border-radius: 15px;
-            background: linear-gradient(45deg, #9333ea, #ec4899, #00ddeb);
+            border-radius: 12px;
+            background: linear-gradient(45deg, #9333ea, #ec4899);
             color: white;
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 5px 20px rgba(147, 51, 234, 0.5);
+            box-shadow: 0 5px 20px rgba(147, 51, 234, 0.4);
         }
         button:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.8);
+            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.7);
         }
         .tabs {
             display: flex;
             justify-content: space-around;
-            margin: 30px 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 8px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 5px;
             transform: translateZ(20px);
         }
         .tab {
-            padding: 12px 30px;
+            padding: 12px 25px;
             cursor: pointer;
-            border-radius: 12px;
+            border-radius: 10px;
             transition: all 0.3s;
             color: #9333ea;
         }
@@ -89,19 +99,19 @@
             transform: scale(1.1);
         }
         .gradient-text {
-            background: linear-gradient(45deg, #9333ea, #ec4899, #00ddeb);
+            background: linear-gradient(45deg, #9333ea, #ec4899);
             -webkit-background-clip: text;
             color: transparent;
             font-weight: bold;
-            text-shadow: 0 0 15px rgba(147, 51, 234, 0.7);
+            text-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
         }
         .loading {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 60px;
-            background: linear-gradient(45deg, #9333ea, #ec4899, #00ddeb);
+            font-size: 50px;
+            background: linear-gradient(45deg, #9333ea, #ec4899);
             -webkit-background-clip: text;
             color: transparent;
             animation: pulse 1.5s infinite;
@@ -112,105 +122,170 @@
             100% { transform: translate(-50%, -50%) scale(1) rotateX(0deg); }
         }
         .avatar {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             margin: 20px auto;
             background: #ddd;
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
-            object-fit: cover; /* Для корректного отображения фото */
+            object-fit: cover;
         }
         .avatar:hover {
             transform: scale(1.1) rotateZ(5deg);
         }
         .snow {
             position: fixed;
-            width: 15px;
-            height: 15px;
+            width: 12px;
+            height: 12px;
             background: white;
             border-radius: 50%;
             pointer-events: none;
             animation: fall linear infinite;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
         @keyframes fall {
             0% { transform: translateY(-100vh) rotateZ(0deg); }
             100% { transform: translateY(100vh) rotateZ(360deg); }
         }
-        .theme-light { background: linear-gradient(135deg, #f5f7fa 0%, #d8b4fe 100%); }
-        .theme-dark { background: linear-gradient(135deg, #1e1e2f 0%, #6b21a8 100%); }
-        .theme-dark .login-box, .theme-dark .profile-box, .theme-dark .main-content {
-            background: rgba(30, 30, 47, 0.95);
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin: 5px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #9333ea;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .theme-dark {
+            background: linear-gradient(135deg, #1e293b 0%, #4c1d95 100%);
+        }
+        .theme-dark .login-box, .theme-dark .register-box, .theme-dark .profile-box, .theme-dark .main-content {
+            background: rgba(30, 41, 59, 0.95);
             color: #fff;
         }
     </style>
 </head>
-<body class="theme-light">
+<body>
     <div id="container" class="container"></div>
 
-    <script>
-        const keys = fetch('https://raw.githubusercontent.com/newfastakk/k/refs/heads/main/keys.txt')
-            .then(res => res.text())
-            .then(text => text.split('\n').filter(k => k.trim()));
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
-        let username, password;
-        const ip = 'user_ip_' + navigator.userAgent.replace(/\W/g, '');
+        const firebaseConfig = {
+            apiKey: "AIzaSyBFR0L-ZQclteVRQafb3QmBDVvqdWTqP5E",
+            authDomain: "genesis-core-8bf44.firebaseapp.com",
+            projectId: "genesis-core-8bf44",
+            storageBucket: "genesis-core-8bf44.firebasestorage.app",
+            messagingSenderId: "277751309296",
+            appId: "1:277751309296:web:546b991be2af8201123335",
+            measurementId: "G-NNBRTN6K47"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        let username;
 
         function showLogin() {
-            const saved = localStorage.getItem(ip) ? JSON.parse(localStorage.getItem(ip)) : {};
             const loginHTML = `
                 <div class="login-box">
                     <h2 class="gradient-text">Log-in</h2>
-                    <input type="text" id="username" placeholder="Username" value="${saved.username || ''}">
-                    <input type="password" id="password" placeholder="Password" value="${saved.password || ''}">
-                    <input type="text" id="key" placeholder="Key">
-                    <button onclick="checkLogin()">Войти</button>
-                    <label><input type="checkbox" id="remember" ${saved.remember ? 'checked' : ''}> Запомнить меня</label>
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="password" id="password" placeholder="Password">
+                    <button onclick="login()">Войти</button>
+                    <p>Нет аккаунта? <span style="color:#9333ea;cursor:pointer" onclick="showRegister()">Зарегистрируйся</span></p>
                 </div>
             `;
             document.getElementById('container').innerHTML = loginHTML;
-
-            if (saved.remember && saved.keyVerified && localStorage.getItem(ip + '_avatar')) {
-                username = saved.username;
-                password = saved.password;
-                fadeOut(showMain);
-            } else if (saved.remember && saved.keyVerified) {
-                username = saved.username;
-                password = saved.password;
-                fadeOut(showPhoto);
-            }
         }
 
-        async function checkLogin() {
-            username = document.getElementById('username').value;
-            password = document.getElementById('password').value;
-            const key = document.getElementById('key').value;
-            const remember = document.getElementById('remember').checked;
+        function showRegister() {
+            const registerHTML = `
+                <div class="register-box">
+                    <h2 class="gradient-text">Register</h2>
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="password" id="password" placeholder="Password">
+                    <input type="text" id="key" placeholder="Key">
+                    <button onclick="register()">Зарегистрироваться</button>
+                    <p>Есть аккаунт? <span style="color:#9333ea;cursor:pointer" onclick="showLogin()">Войди</span></p>
+                </div>
+            `;
+            document.getElementById('container').innerHTML = registerHTML;
+        }
 
-            const validKeys = await keys;
+        async function register() {
+            username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const key = document.getElementById('key').value;
+            const email = `${username}@genesis-core.com`; // Фиктивный email для Firebase
+
+            const validKeys = await fetch('https://raw.githubusercontent.com/newfastakk/k/refs/heads/main/keys.txt')
+                .then(res => res.text())
+                .then(text => text.split('\n').filter(k => k.trim()));
+
             if (validKeys.includes(key)) {
-                localStorage.setItem(ip, JSON.stringify({ 
-                    username, 
-                    password, 
-                    remember, 
-                    keyVerified: true 
-                }));
-                fadeOut(showPhoto);
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then(() => fadeOut(showPhoto))
+                    .catch(error => alert('Ошибка регистрации: ' + error.message));
             } else {
                 alert('Неверный ключ!');
             }
         }
 
+        function login() {
+            username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const email = `${username}@genesis-core.com`;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    const avatar = localStorage.getItem('avatar_' + username);
+                    fadeOut(avatar ? showMain : showPhoto);
+                })
+                .catch(error => alert('Ошибка входа: ' + error.message));
+        }
+
         function showPhoto() {
-            const savedAvatar = localStorage.getItem(ip + '_avatar') || '';
+            const savedAvatar = localStorage.getItem('avatar_' + username) || '';
             const photoHTML = `
                 <div class="profile-box">
-                    <h2 class="gradient-text">Hi dear ${username}, now take a picture:</h2>
+                    <h2 class="gradient-text">Hi dear ${username}, set your photo:</h2>
                     <div class="avatar" style="background-image:url(${savedAvatar})" onclick="document.getElementById('avatarInput').click()"></div>
                     <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
-                    <button onclick="fadeOut(showLoading)">Выбрать</button>
+                    <button onclick="fadeOut(showLoading)">Сохранить</button>
                 </div>
             `;
             document.getElementById('container').innerHTML = photoHTML;
@@ -221,7 +296,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = () => {
-                    localStorage.setItem(ip + '_avatar', reader.result);
+                    localStorage.setItem('avatar_' + username, reader.result);
                     document.querySelector('.avatar').style.backgroundImage = `url(${reader.result})`;
                 };
                 reader.readAsDataURL(file);
@@ -237,11 +312,10 @@
         }
 
         function showMain() {
-            const avatar = localStorage.getItem(ip + '_avatar') || '';
-            const saved = JSON.parse(localStorage.getItem(ip));
+            const avatar = localStorage.getItem('avatar_' + username) || '';
             const mainHTML = `
                 <div class="main-content">
-                    <h2 class="gradient-text">Welcome!</h2>
+                    <h2 class="gradient-text">Welcome, ${username}!</h2>
                     <div class="tabs">
                         <div class="tab active" onclick="showTab('profile', this)">Profile</div>
                         <div class="tab" onclick="showTab('download', this)">Download</div>
@@ -251,32 +325,33 @@
                         <div id="profile" class="tab-pane">
                             <div class="avatar" style="background-image:url(${avatar})" onclick="document.getElementById('avatarInput').click()"></div>
                             <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
-                            <input type="text" value="${saved.username}" id="editUsername">
-                            <input type="password" value="${saved.password}" id="editPassword">
-                            <h3 class="gradient-text">Настройки</h3>
-                            <label><input type="checkbox" id="snow" onchange="toggleSnow()"> Snow</label><br>
-                            <label><input type="checkbox" id="blur" onchange="toggleBlur()" checked> Размытые блоки</label><br>
-                            <label><input type="checkbox" id="translate"> Авто перевод</label><br>
+                            <input type="text" value="${username}" readonly>
+                            <input type="password" id="editPassword" placeholder="New Password">
+                            <button onclick="updatePassword()">Обновить пароль</button>
+                            <h3 class="gradient-text">Settings</h3>
+                            <label>Snow <span class="switch"><input type="checkbox" onchange="toggleSnow()"><span class="slider"></span></span></label><br>
+                            <label>Blur <span class="switch"><input type="checkbox" checked onchange="toggleBlur()"><span class="slider"></span></span></label><br>
+                            <label>Translate <span class="switch"><input type="checkbox"><span class="slider"></span></span></label><br>
                             <select onchange="switchTheme(this.value)">
-                                <option value="light">Светлая тема</option>
-                                <option value="dark">Тёмная тема</option>
+                                <option value="light">Light Theme</option>
+                                <option value="dark">Dark Theme</option>
                             </select><br>
                             <button onclick="logout()">Выйти</button>
                         </div>
                         <div id="download" class="tab-pane" style="display:none">
-                            <input type="text" placeholder="Поиск...">
+                            <input type="text" placeholder="Search...">
                             <div style="text-align:left">
                                 <img src="https://icons.veryicon.com/png/o/education-technology/power-icon/core-4.png" style="width:70px;border-radius:15px">
                                 <h3 class="gradient-text">Genesis Core</h3>
-                                <p>Версия: 2.6(f2)</p>
+                                <p>Version: 2.6(f2)</p>
                                 <p>Best quality emulator, with custom fixes</p>
-                                <button onclick="installApp()">Установить</button>
+                                <button onclick="installApp()">Install</button>
                             </div>
                         </div>
                         <div id="news" class="tab-pane" style="display:none">
-                            <h3 class="gradient-text">upgraded to 2.6(f2)</h3>
-                            <p>fixed bugs</p>
-                            <p>author: <span class="gradient-text">newfastakk(dev)</span></p>
+                            <h3 class="gradient-text">Upgraded to 2.6(f2)</h3>
+                            <p>Fixed bugs</p>
+                            <p>Author: <span class="gradient-text">newfastakk(dev)</span></p>
                         </div>
                     </div>
                 </div>
@@ -304,15 +379,15 @@
 
         function installApp() {
             const btn = document.querySelector('#download button');
-            btn.textContent = 'Устанавливается...';
+            btn.textContent = 'Installing...';
             setTimeout(() => {
-                btn.textContent = 'Установить';
+                btn.textContent = 'Install';
                 window.open('https://t.me/c/2254905235/4', '_blank');
             }, 3000);
         }
 
         function toggleSnow() {
-            if (document.getElementById('snow').checked) {
+            if (document.querySelector('#profile .switch input').checked) {
                 for (let i = 0; i < 50; i++) {
                     const snow = document.createElement('div');
                     snow.className = 'snow';
@@ -327,17 +402,24 @@
 
         function toggleBlur() {
             document.querySelector('.main-content').style.backdropFilter = 
-                document.getElementById('blur').checked ? 'blur(20px)' : 'blur(0)';
+                document.querySelector('#profile .switch input:nth-child(2)').checked ? 'blur(20px)' : 'blur(0)';
         }
 
         function switchTheme(theme) {
-            document.body.className = theme === 'light' ? 'theme-light' : 'theme-dark';
+            document.body.className = theme === 'light' ? '' : 'theme-dark';
         }
 
         function logout() {
-            localStorage.removeItem(ip);
-            localStorage.removeItem(ip + '_avatar');
-            fadeOut(showLogin);
+            signOut(auth).then(() => fadeOut(showLogin));
+        }
+
+        function updatePassword() {
+            const newPassword = document.getElementById('editPassword').value;
+            if (newPassword) {
+                auth.currentUser.updatePassword(newPassword)
+                    .then(() => alert('Пароль обновлён!'))
+                    .catch(error => alert('Ошибка: ' + error.message));
+            }
         }
 
         showLogin();
